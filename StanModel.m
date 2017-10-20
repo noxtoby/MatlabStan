@@ -111,7 +111,7 @@ classdef StanModel < handle
       id 
    end
    properties(SetAccess = private)
-      model_home = ''% url or path to .stan file
+      model_home = '' % url or path to .stan file
    end
    properties(Dependent = true)
       file = ''
@@ -217,6 +217,8 @@ classdef StanModel < handle
          
          if isempty(p.Results.sample_file)
             self.params.output.file = [self.id '-output.csv'];
+         else
+           self.params.output.file = p.Results.sample_file;
          end
 
          % pass remaining inputs to set()
@@ -267,8 +269,15 @@ classdef StanModel < handle
          if ~isempty(p.Results.id)
             self.id = p.Results.id;
          end
-         self.params.output.file = [self.id '-output.csv'];
-        
+         %********* Modified code: Neil Oxtoby, October 2017
+         % self.params.output.file = [self.id '-output.csv'];
+         if isempty(p.Results.sample_file)
+           self.params.output.file = [self.id '-output.csv'];
+         else
+           self.params.output.file = p.Results.sample_file;
+         end
+         %********* End: Modified code
+         
          self.method = p.Results.method;
          self.chains = p.Results.chains;
          self.iter = p.Results.iter;
